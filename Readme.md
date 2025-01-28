@@ -71,7 +71,7 @@ If you don't have any SSH key on your local linux based system, you must create 
   6.2) Add the public key to the `~/.ssh/authorized_keys` file of the same user that you connected with SSH:
 
   ```bash
-  echo "TU_CLAVE_PUBLICA" >> ~/.ssh/authorized_keys
+  echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
   chmod 600 ~/.ssh/authorized_keys
   ```
 
