@@ -19,6 +19,11 @@
 - Action: Connect to machine 1 and obtain all user's UID and GID (excluding system accounts) then connect to machine 2 to verify user's UID and GID
 - Result: If user doesn't exist or missmatch the UID/GID then create/update the user. LDAP don't exist, it's all host based authentication.
 
+### Workflow Summary `disaster_recovery.yml` without using users.yml
+
+- Know that: Machine 1, `VM1_HOST`, and Machine 2, `VM2_HOST` are treated as potential sources of "truth" for user data (UID/GID)
+- Action: Get all users, UIDs, and GIDs from Machine 1 and Machine 2. Each machine's `/etc/passwd` is parsed for user information.
+- Result: If user doesn't exist or missmatch the UID/GID then create/update the user on the host where this happened. LDAP don't exist, it's all host based authentication.
 
 ## Considerations
 
