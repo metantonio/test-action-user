@@ -7,4 +7,11 @@
 - Result: If user doesn't exist then configure the LDAP
 
 
+## Considerations
+
+You must have secret key configured on this repository:
+
+  - Settings > Secrets and variables > Actions.
+  - Create a new secret named: `SSH_PRIVATE_KEY` and paste the secret key from your local machine
+
 
