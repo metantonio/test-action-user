@@ -24,6 +24,8 @@
 - Know that: Machine 1, `VM1_HOST`, and Machine 2, `VM2_HOST` are treated as potential sources of "truth" for user data (UID/GID)
 - Action: Get all users, UIDs, and GIDs from Machine 1 and Machine 2. Each machine's `/etc/passwd` is parsed for user information.
 - Result: If user doesn't exist or missmatch the UID/GID then create/update the user on the host where this happened. LDAP don't exist, it's all host based authentication.
+- Test this workflow running with GitHub Actions and docker (won't use the secret keys because is a test). Use `test_disaster_recovery.yml` action
+
 
 ## Considerations
 
