@@ -6,6 +6,12 @@
 - Action: Connect to machines to verify user's UID and GID with the .yml file
 - Result: If user doesn't exist then configure the LDAP
 
+## Workflow Summary `direct-verification.yml`
+
+- Input: users.yml -> List of user that needs to verify
+- Action: Connect to machines to verify user's UID and GID with the .yml file
+- Result: If user doesn't exist or missmatch the UID/GID then configure create/update de user
+
 
 ## Considerations
 
