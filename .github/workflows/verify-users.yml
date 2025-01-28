@@ -1,0 +1,33 @@
+name: Verify Users and Configure LDAP
+
+on:
+  workflow_dispatch:
+    inputs:
+      ymlFile:
+        description: "path to the YML with users that need to be verified"
+        required: true
+        default: "users.yml"
+
+jobs:
+  verify-users:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sshpass yq
+
+    - name: Execute script
+      env:
+        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        echo "$SSH_KEY" > id_rsa
+        chmod 600 id_rsa
+        export SSH_AUTH_SOCK=$(ssh-agent)
+        ssh-add id_rsa
+
+        bash scripts/verify_and_configure.sh ${{ github.event.inputs.ymlFile }}
