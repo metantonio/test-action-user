@@ -43,7 +43,7 @@ If you don't have any SSH key on your local linux based system, you must create 
 5) You will need to copy the `Public key`. Open the file to copy it at:
 
    ```bash
-  cat /home/usuario/github-action-key.pub
+   cat /home/usuario/github-action-key.pub
    ```
 
 6) The following process must be repeated  on your machines, in order to authorize access with the public keys:
