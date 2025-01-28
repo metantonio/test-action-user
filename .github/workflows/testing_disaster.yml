@@ -1,4 +1,4 @@
-name: Test User Sync Script
+name: Test Disaster Scenario Recovery of users 
 
 on:
   workflow_dispatch:
