@@ -1,12 +1,12 @@
 # Test to verify users on 2 different virtual machines with linux red hat/ubuntu.
 
-## Workflow Summary `verify-users.yml`
+## Workflow Summary `verify-users.yml` using users.yml
 
 - Input: users.yml -> List of user that needs to verify
 - Action: Connect to machines to verify user's UID and GID with the .yml file
 - Result: If user doesn't exist then configure the LDAP
 
-## Workflow Summary `direct-verification.yml`
+## Workflow Summary `direct-verification.yml` using users.yml
 
 - Input: users.yml -> List of user that needs to verify
 - Action: Connect to machines to verify user's UID and GID with the .yml file
