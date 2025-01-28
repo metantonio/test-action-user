@@ -62,27 +62,27 @@ If you don't have any SSH key on your local linux based system, you must create 
 
 6) The following process must be repeated  on your machines, in order to authorize access with the public keys:
 
-  6.1) Access to you machines phisically or through SSH with:
+    6.1) Access to you machines phisically or through SSH with:
 
   ```bash
   ssh user@<IP_O_HOSTNAME>
   ```
 
-  6.2) Add the public key to the `~/.ssh/authorized_keys` file of the same user that you connected with SSH:
+    6.2) Add the public key to the `~/.ssh/authorized_keys` file of the same user that you connected with SSH:
 
   ```bash
   echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
   chmod 600 ~/.ssh/authorized_keys
   ```
 
-  6.3) Check if the SSH server has enabled the authentication with public keys in the file `/etc/ssh/sshd_config`, and check the following lines:
+    6.3) Check if the SSH server has enabled the authentication with public keys in the file `/etc/ssh/sshd_config`, and check the following lines:
 
   ```bash
   PubkeyAuthentication yes
   AuthorizedKeysFile .ssh/authorized_keys
   ```
 
-  6.4) Restart the SSH service:
+    6.4) Restart the SSH service:
 
   ```ssh
   sudo systemctl restart sshd
