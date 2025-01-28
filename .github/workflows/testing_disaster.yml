@@ -1,0 +1,53 @@
+name: Test User Sync Script
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+    - name: Create two Docker containers
+      run: |
+        # Create container 1 (Machine 1) with dummy user data
+        docker run -d --name vm1 --hostname vm1 -it ubuntu:20.04 bash
+        docker exec vm1 bash -c "apt-get update && apt-get install -y sudo"
+        docker exec vm1 bash -c "echo 'user1:x:1001:1001:User One:/home/user1:/bin/bash' >> /etc/passwd"
+        docker exec vm1 bash -c "echo 'user1:x:1001:' >> /etc/group"
+
+        # Create container 2 (Machine 2) with dummy user data
+        docker run -d --name vm2 --hostname vm2 -it ubuntu:20.04 bash
+        docker exec vm2 bash -c "apt-get update && apt-get install -y sudo"
+        docker exec vm2 bash -c "echo 'user2:x:1002:1002:User Two:/home/user2:/bin/bash' >> /etc/passwd"
+        docker exec vm2 bash -c "echo 'user2:x:1002:' >> /etc/group"
+
+    - name: Make script executable
+      run: chmod +x scripts/disaster_recovery.sh
+
+    - name: Test user synchronization
+      run: |
+        # Run the sync script to reconcile users between the two containers
+        bash scripts/disaster_recovery.sh \
+          "docker exec vm1" \
+          "docker exec vm2"
+
+    - name: Verify the results
+      run: |
+        echo "Users on VM1:"
+        docker exec vm1 cat /etc/passwd | grep -E "user1|user2"
+        echo "Users on VM2:"
+        docker exec vm2 cat /etc/passwd | grep -E "user1|user2"
+
+    - name: Cleanup
+      run: |
+        docker stop vm1 vm2
+        docker rm vm1 vm2
