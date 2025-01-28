@@ -43,12 +43,12 @@ jobs:
         docker exec vm2 bash -c "echo 'user2:x:1002:' >> /etc/group"
 
     - name: Make script executable
-      run: chmod +x scripts/disaster_recovery.sh
+      run: chmod +x scripts/test_disaster_recovery.sh
 
     - name: Test user synchronization
       run: |
         # Run the sync script to reconcile users between the two containers
-        bash scripts/disaster_recovery.sh \
+        bash scripts/test_disaster_recovery.sh \
           "docker exec vm1" \
           "docker exec vm2"
 
