@@ -29,7 +29,7 @@ You must have a secret key configured on this repository:
   - The user and IP used to connect to the virtual machines are secret keys too, named:
     - `VM1_HOST`
     - `VM2_HOST`
-    - - Note: VMx_HOST format is: `username@IP-TO-HOST`
+    - - Note: VMx_HOST format is: `username@IP-TO-HOST`.
 
 
 
