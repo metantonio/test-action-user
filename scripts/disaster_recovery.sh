@@ -9,6 +9,21 @@ get_users_from_host() {
   ssh -o StrictHostKeyChecking=no user@$host "awk -F: '\$3 >= 1000 && \$3 < 65534 {print \$1,\$3,\$4}' /etc/passwd"
 }
 
+# Function to ensure a group exists on a machine
+ensure_group_on_host() {
+  local gid=$1
+  local host=$2
+
+  ssh -o StrictHostKeyChecking=no user@$host <<EOF
+if ! getent group $gid >/dev/null; then
+  echo "Creating group with GID=$gid on $host..."
+  sudo groupadd -g $gid "group_$gid" || echo "Failed to create group with GID=$gid. It might already exist with a different name."
+else
+  echo "Group with GID=$gid already exists on $host."
+fi
+EOF
+}
+
 # Function to create or update a user on a machine
 sync_user_to_host() {
   local user=$1
@@ -29,8 +44,7 @@ if id "$user" >/dev/null 2>&1; then
   fi
 else
   echo "Creating user $user on $host with UID=$uid and GID=$gid..."
-  sudo groupadd -g $gid "$user" || echo "Group $user already exists."
-  sudo useradd -u $uid -g $gid -m "$user"
+  sudo useradd -u $uid -g $gid -m "$user" || echo "Failed to create user $user on $host."
 fi
 EOF
 }
@@ -50,10 +64,18 @@ all_users=$(echo -e "$users_vm1\n$users_vm2" | sort -u)
 echo "$all_users" | while read -r user uid gid; do
   echo "Processing user $user (UID=$uid, GID=$gid)..."
   
+  # Ensure the group exists on Machine 1
+  echo "Ensuring group with GID=$gid exists on $VM1_HOST..."
+  ensure_group_on_host "$gid" "$VM1_HOST"
+
   # Sync user to Machine 1
   echo "Ensuring $user exists on $VM1_HOST..."
   sync_user_to_host "$user" "$uid" "$gid" "$VM1_HOST"
   
+  # Ensure the group exists on Machine 2
+  echo "Ensuring group with GID=$gid exists on $VM2_HOST..."
+  ensure_group_on_host "$gid" "$VM2_HOST"
+
   # Sync user to Machine 2
   echo "Ensuring $user exists on $VM2_HOST..."
   sync_user_to_host "$user" "$uid" "$gid" "$VM2_HOST"
