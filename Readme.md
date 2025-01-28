@@ -9,9 +9,16 @@
 
 ## Considerations
 
-You must have secret key configured on this repository:
+You must have a secret key configured on this repository:
 
   - Settings > Secrets and variables > Actions.
   - Create a new secret named: `SSH_PRIVATE_KEY` and paste the secret key from your local machine
 
 
+If you don't have any SSH key on your local linux based system, you must create one:
+
+1) Generate a pair of SSH keys (public and private) with any string:
+   
+   ```bash
+    ssh-keygen -t rsa -b 4096 -C "my_email@example.com"
+   ```
