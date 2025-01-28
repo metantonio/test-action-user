@@ -15,7 +15,7 @@
 
 ### Workflow Summary `verify_and_sync_users.yml` without using users.yml
 
-- Know that: Machine 1 is treated as the "truth" for user data (UID/GID)
+- Know that: Machine 1, `VM1_HOST`, is treated as the "truth" for user data (UID/GID)
 - Action: Connect to machine 1 and obtain all user's UID and GID (excluding system accounts) then connect to machine 2 to verify user's UID and GID
 - Result: If user doesn't exist or missmatch the UID/GID then create/update the user. LDAP don't exist, it's all host based authentication.
 
