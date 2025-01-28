@@ -1,6 +1,6 @@
 # Test to verify users on 2 different virtual machines with linux red hat/ubuntu.
 
-## Summary `verify-users.yml`
+## Workflow Summary `verify-users.yml`
 
 - Input: users.yml -> List of user that needs to verify
 - Action: Connect to machines to verify user's UID and GID with the .yml file
