@@ -27,10 +27,12 @@ jobs:
     - name: Execute script
       env:
         SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        VM1_HOST: ${{ secrets.VM1_HOST }}
+        VM2_HOST: ${{ secrets.VM2_HOST }}
       run: |
         echo "$SSH_KEY" > id_rsa
         chmod 600 id_rsa
         eval $(ssh-agent)
         ssh-add id_rsa
 
-        bash scripts/verify_and_configure.sh ${{ github.event.inputs.ymlFile }}
+        bash scripts/verify_and_configure.sh ${{ github.event.inputs.ymlFile }} "$VM1_HOST" "$VM2_HOST"
