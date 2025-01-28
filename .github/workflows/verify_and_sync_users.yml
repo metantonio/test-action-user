@@ -1,0 +1,38 @@
+name: Verify and Sync Users
+
+on:
+  workflow_dispatch:
+    inputs:
+      vm1_host:
+        description: "IP or hostname of VM1"
+        required: true
+      vm2_host:
+        description: "IP or hostname of VM2"
+        required: true
+
+jobs:
+  verify-and-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sshpass
+
+    - name: Make script executable
+      run: chmod +x scripts/verify_and_sync_users.sh
+
+    - name: Execute script
+      env:
+        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        echo "$SSH_KEY" > id_rsa
+        chmod 600 id_rsa
+        eval $(ssh-agent)
+        ssh-add id_rsa
+
+        bash scripts/verify_and_sync_users.sh ${{ github.event.inputs.vm1_host }} ${{ github.event.inputs.vm2_host }}
