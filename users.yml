@@ -1,0 +1,7 @@
+users:
+  - username: user1
+    uid: 1001
+    gid: 1001
+  - username: user2
+    uid: 1002
+    gid: 1002
