@@ -1,7 +1,12 @@
 #!/bin/bash
 
 YML_FILE=$1
-HOSTS=("192.168.1.100" "192.168.1.101") # IPs of virtual machines
+VM1_HOST=$2
+VM2_HOST=$3
+
+# HOSTS=("192.168.1.100" "192.168.1.101") # IPs of virtual machines
+HOSTS=("$VM1_HOST" "$VM2_HOST") # Added Host dinamycally from repository secret keys 
+
 LDAP_CONFIG_FILE="/etc/ldap/slapd.conf" # LDAP path (i assume it is the same path for both machines)
 
 # Read YML (requieres yq installed)
