@@ -44,7 +44,7 @@ If you don't have any SSH key on your local linux based system, you must create 
 
    ```bash
   cat /home/usuario/github-action-key.pub
-   ``
+   ```
 
 6) The following process must be repeated  on your machines, in order to authorize access with the public keys:
 
