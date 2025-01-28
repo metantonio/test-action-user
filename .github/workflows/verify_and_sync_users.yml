@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y sshpass
+        sudo apt-get install -y sshpass yq
 
     - name: Make script executable
       run: chmod +x scripts/verify_and_sync_users.sh
