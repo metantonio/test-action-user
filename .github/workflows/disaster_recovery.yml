@@ -1,0 +1,33 @@
+name: Disaster Recovery - Sync Users
+
+on:
+  workflow_dispatch: # Trigger the workflow manually
+
+jobs:
+  sync-users:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sshpass
+
+    - name: Make script executable
+      run: chmod +x scripts/disaster_recovery.sh
+
+    - name: Execute script
+      env:
+        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        VM1_HOST: ${{ secrets.VM1_HOST }}
+        VM2_HOST: ${{ secrets.VM2_HOST }}
+      run: |
+        echo "$SSH_KEY" > id_rsa
+        chmod 600 id_rsa
+        eval $(ssh-agent)
+        ssh-add id_rsa
+
+        bash scripts/disaster_recovery.sh "$VM1_HOST" "$VM2_HOST"
