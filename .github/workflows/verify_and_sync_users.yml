@@ -1,14 +1,7 @@
 name: Verify and Sync Users
 
 on:
-  workflow_dispatch:
-    inputs:
-      vm1_host:
-        description: "IP or hostname of VM1"
-        required: true
-      vm2_host:
-        description: "IP or hostname of VM2"
-        required: true
+  workflow_dispatch: # Execute it manually
 
 jobs:
   verify-and-sync:
@@ -29,10 +22,12 @@ jobs:
     - name: Execute script
       env:
         SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        VM1_HOST: ${{ secrets.VM1_HOST }}
+        VM2_HOST: ${{ secrets.VM2_HOST }}
       run: |
         echo "$SSH_KEY" > id_rsa
         chmod 600 id_rsa
         eval $(ssh-agent)
         ssh-add id_rsa
 
-        bash scripts/verify_and_sync_users.sh ${{ github.event.inputs.vm1_host }} ${{ github.event.inputs.vm2_host }}
+        bash scripts/verify_and_sync_users.sh "$VM1_HOST" "$VM2_HOST"
