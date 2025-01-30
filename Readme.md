@@ -1,47 +1,47 @@
-# GitHub Action Test
-## Verify users on 2 different virtual machines with linux red hat/ubuntu.
+# GitHub Action Test  
+### Verify users on two different virtual machines running Linux (Red Hat/Ubuntu).  
 
-### Workflow Summary `verify-users.yml` using users.yml
+## 📌 Workflows Overview  
 
-- Input: users.yml -> List of user that needs to verify
-- Action: Connect to machines to verify user's UID and GID with the .yml file
-- Result: If user doesn't exist then configure the LDAP
+### 🟢 `verify-users.yml` (Using `users.yml`)  
+- **Input:** `users.yml` → List of users to verify.  
+- **Action:** Connects to VMs and verifies each user's UID/GID against `users.yml`.  
+- **Result:** If a user doesn’t exist, configure LDAP.  
 
-### Workflow Summary `direct-verification.yml` using users.yml
+### 🔵 `direct-verification.yml` (Using `users.yml`)  
+- **Input:** `users.yml` → List of users to verify.  
+- **Action:** Connects to VMs and verifies each user's UID/GID against `users.yml`.  
+- **Result:** If a user doesn’t exist or UID/GID mismatch is found, create or update the user. LDAP is not used; authentication is host-based.  
 
-- Input: users.yml -> List of user that needs to verify
-- Action: Connect to machines to verify user's UID and GID with the .yml file
-- Result: If user doesn't exist or missmatch the UID/GID then create/update the user. LDAP don't exist, it's all host based authentication.
+### 🟠 `verify_and_sync_users.yml` (Without `users.yml`)  
+- **Reference Machine:** `VM1_HOST` (Primary source of truth for user data).  
+- **Action:** Retrieves all user UID/GID data from `VM1_HOST` (excluding system accounts) and verifies against `VM2_HOST`.  
+- **Result:** If a user doesn’t exist or has a UID/GID mismatch, create or update the user on `VM2_HOST`. Authentication is host-based (no LDAP).  
 
-### Workflow Summary `verify_and_sync_users.yml` without using users.yml
+### 🔴 `disaster_recovery.yml` (Without `users.yml`)  
+- **Reference Machines:** Both `VM1_HOST` and `VM2_HOST` are treated as sources of truth.  
+- **Action:** Extracts user data (UID/GID) from `/etc/passwd` on both machines.  
+- **Result:** If a user doesn’t exist or has a UID/GID mismatch, create or update the user on the affected machine.  
+- **Testing:** Run the workflow using GitHub Actions and Docker (`test_disaster_recovery.yml`). No secret keys are used in the test.  
 
-- Know that: Machine 1, `VM1_HOST`, is treated as the "truth" for user data (UID/GID)
-- Action: Connect to machine 1 and obtain all user's UID and GID (excluding system accounts) then connect to machine 2 to verify user's UID and GID
-- Result: If user doesn't exist or missmatch the UID/GID then create/update the user. LDAP don't exist, it's all host based authentication.
+---
 
-### Workflow Summary `disaster_recovery.yml` without using users.yml
+## 🔑 Setting Up Secrets  
 
-- Know that: Machine 1, `VM1_HOST`, and Machine 2, `VM2_HOST` are treated as potential sources of "truth" for user data (UID/GID)
-- Action: Get all users, UIDs, and GIDs from Machine 1 and Machine 2. Each machine's `/etc/passwd` is parsed for user information.
-- Result: If user doesn't exist or missmatch the UID/GID then create/update the user on the host where this happened. LDAP don't exist, it's all host based authentication.
-- Test this workflow running with GitHub Actions and docker (won't use the secret keys because is a test). Use `test_disaster_recovery.yml` action
+To run these workflows, you need to configure secret keys in your repository:  
 
+1. Go to **Settings > Secrets and variables > Actions**.  
+2. Create a new secret named **`SSH_PRIVATE_KEY`**, then paste your private SSH key.  
+3. Add the following secrets for VM connection details:  
+   - **`VM1_HOST`** → Format: `username@IP-TO-HOST`  
+   - **`VM2_HOST`** → Format: `username@IP-TO-HOST`  
 
-## Considerations
-
-You must have a secret key configured on this repository:
-
-  - Settings > Secrets and variables > Actions.
-  - Create a new secret named: `SSH_PRIVATE_KEY` and paste the secret key from your local machine.
-  - The user and IP used to connect to the virtual machines are secret keys too, named:
-    - `VM1_HOST`
-    - `VM2_HOST`
-    - - Note: VMx_HOST format is: `username@IP-TO-HOST`.
-
-
+---
 
 
-If you don't have any SSH key on your local linux based system, you must create one:
+## 🔧 Generating and Configuring an SSH Key  
+
+If you don’t have an SSH key, follow these steps to create one:  
 
 1) Generate a pair of SSH keys (public and private) with any string:
    
